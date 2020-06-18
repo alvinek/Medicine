@@ -64,7 +64,7 @@ namespace Medicine
             {
                 Console.Write("#: ");
                 var userInput = Console.ReadLine();
-                if (decimal.TryParse(userInput, out parsedInput))
+                if (decimal.TryParse(userInput.Replace(",","."), out parsedInput))
                 {
                     break;
                 }
