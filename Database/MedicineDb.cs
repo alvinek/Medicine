@@ -7,16 +7,6 @@ namespace Medicine.Database
 {
     public class Medicine
     {
-        public int Id { get; set; }
-        public string MedicineName { get; set; }
-        public int MedicineQuantity { get; set; }
-        public string MedicineQuantityType { get; set; }
-        public string MedicineProducer { get; set; }
-        public bool MedicineRefundPossible { get; set; }
-        public int MedicineRefundPercentage { get; set; }
-        public decimal MedicinePrice { get; set; }
-        public decimal MedicinePriceWithRefund { get; set; }
-
         public Medicine(int id, string medName, int quantity, string quantityType, string producer, decimal price, bool refundPossible = false, int refundPercentage = 0)
         {
             Id = id;
@@ -43,6 +33,15 @@ namespace Medicine.Database
             }
         }
 
+        public int Id { get; set; }
+        public string MedicineName { get; set; }
+        public decimal MedicinePrice { get; set; }
+        public decimal MedicinePriceWithRefund { get; set; }
+        public string MedicineProducer { get; set; }
+        public int MedicineQuantity { get; set; }
+        public string MedicineQuantityType { get; set; }
+        public int MedicineRefundPercentage { get; set; }
+        public bool MedicineRefundPossible { get; set; }
     }
     public class MedicineDb
     {
@@ -83,6 +82,31 @@ namespace Medicine.Database
             }
         }
 
+        public void AddMedicine()
+        {
+            string medicineName = ConsoleGUI.PromptRender("Nazwa leku: ");
+            string medicineProducer = ConsoleGUI.PromptRender("Producent: ");
+            int medicineQuantity = ConsoleGUI.PromptRenderInt("Ilość: ");
+            string quantityType = ConsoleGUI.PromptRender("Określenie jednostki: ");
+            decimal price = ConsoleGUI.PromptRenderDecimal("Cena: ");
+
+            bool refundPossible = ConsoleGUI.PromptRender("Czy jest dostępna refundacja? (t/n)").Trim().ToLower().First() == 't';
+            Medicine medicine;
+
+            if (refundPossible)
+            {
+                int refundPercentage = ConsoleGUI.PromptRenderInt("% refundacji: ");
+                medicine = new Medicine(GetNextId(), medicineName, medicineQuantity, quantityType, medicineProducer, price, refundPossible, refundPercentage);
+            }
+            else
+            {
+                medicine = new Medicine(GetNextId(), medicineName, medicineQuantity, quantityType, medicineProducer, price);
+            }
+
+            medicineDb.Add(medicine);
+            Flush();
+        }
+
         public Medicine GetMedicineById(int id)
         {
             if (id < 0) return null;
@@ -94,43 +118,7 @@ namespace Medicine.Database
             return null;
         }
 
-        private bool DeleteMedicine(int id)
-        {
-            var medicineRemoved = GetMedicineById(id);
-
-            bool success = false;
-
-            if (medicineRemoved != null)
-            {
-                success = medicineDb.Remove(medicineRemoved);
-                Flush();
-            }
-
-            return success;
-        }
-
-        private void Flush()
-        {
-            DbFiles dbFiles = new DbFiles();
-
-            File.Delete(dbFiles.MainDbFile);
-
-            List<string> newFile = new List<string>();
-
-            foreach (var data in medicineDb)
-            {
-                newFile.Add($"{data.Id},"
-                    + $"{data.MedicineName},"
-                    + $"{data.MedicineQuantity},"
-                    + $"{data.MedicineQuantityType},"
-                    + $"{data.MedicineProducer},"
-                    + $"{data.MedicineRefundPossible.ToString().ToLower()},"
-                    + $"{data.MedicineRefundPercentage},"
-                    + $"{data.MedicinePrice}");
-            }
-
-            File.WriteAllLines(dbFiles.MainDbFile, newFile);
-        }
+        public int GetNextId() => medicineDb.Max(x => x.Id) + 1;
 
         public void RemoveMedicine()
         {
@@ -175,31 +163,42 @@ namespace Medicine.Database
             }
         }
 
-        public int GetNextId() => medicineDb.Max(x => x.Id) + 1;
-
-        public void AddMedicine()
+        private bool DeleteMedicine(int id)
         {
-            string medicineName = ConsoleGUI.PromptRender("Nazwa leku: ");
-            string medicineProducer = ConsoleGUI.PromptRender("Producent: ");
-            int medicineQuantity = ConsoleGUI.PromptRenderInt("Ilość: ");
-            string quantityType = ConsoleGUI.PromptRender("Określenie jednostki: ");
-            decimal price = ConsoleGUI.PromptRenderDecimal("Cena: ");
+            var medicineRemoved = GetMedicineById(id);
 
-            bool refundPossible = ConsoleGUI.PromptRender("Czy jest dostępna refundacja? (t/n)").Trim().ToLower().First() == 't';
-            Medicine medicine;
+            bool success = false;
 
-            if (refundPossible)
+            if (medicineRemoved != null)
             {
-                int refundPercentage = ConsoleGUI.PromptRenderInt("% refundacji: ");
-                medicine = new Medicine(GetNextId(), medicineName, medicineQuantity, quantityType, medicineProducer, price, refundPossible, refundPercentage);
-            }
-            else
-            {
-                medicine = new Medicine(GetNextId(), medicineName, medicineQuantity, quantityType, medicineProducer, price);
+                success = medicineDb.Remove(medicineRemoved);
+                Flush();
             }
 
-            medicineDb.Add(medicine);
-            Flush();
+            return success;
+        }
+
+        private void Flush()
+        {
+            DbFiles dbFiles = new DbFiles();
+
+            File.Delete(dbFiles.MainDbFile);
+
+            List<string> newFile = new List<string>();
+
+            foreach (var data in medicineDb)
+            {
+                newFile.Add($"{data.Id},"
+                    + $"{data.MedicineName},"
+                    + $"{data.MedicineQuantity},"
+                    + $"{data.MedicineQuantityType},"
+                    + $"{data.MedicineProducer},"
+                    + $"{data.MedicineRefundPossible.ToString().ToLower()},"
+                    + $"{data.MedicineRefundPercentage},"
+                    + $"{data.MedicinePrice}");
+            }
+
+            File.WriteAllLines(dbFiles.MainDbFile, newFile);
         }
     }
 }
