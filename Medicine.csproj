@@ -44,19 +44,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleGUI\Render.cs" />
-    <Compile Include="DbBrowser.cs" />
-    <Compile Include="DbFiles.cs" />
-    <Compile Include="MedicineDb.cs" />
+    <Compile Include="Database\DbBrowser.cs" />
+    <Compile Include="Database\DbFiles.cs" />
+    <Compile Include="Database\MedicineDb.cs" />
     <Compile Include="Pharmacy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserDb.cs" />
+    <Compile Include="Database\UserDb.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Classes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

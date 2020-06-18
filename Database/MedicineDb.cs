@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Medicine
+namespace Medicine.Database
 {
     public class Medicine
     {
@@ -33,7 +33,7 @@ namespace Medicine
                 if (MedicineRefundPercentage != 0)
                 {
                     MedicineRefundPercentage = refundPercentage;
-                    MedicinePriceWithRefund = Math.Round(MedicinePrice - (MedicineRefundPercentage / (decimal)100 * MedicinePrice), 2);
+                    MedicinePriceWithRefund = Math.Round(MedicinePrice - MedicineRefundPercentage / (decimal)100 * MedicinePrice, 2);
                 }
             }
             else

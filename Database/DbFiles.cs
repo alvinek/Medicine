@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Medicine
+namespace Medicine.Database
 {
     public class DbFiles
     {

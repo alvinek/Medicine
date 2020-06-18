@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Medicine
+namespace Medicine.Database
 {
     public class User
     {

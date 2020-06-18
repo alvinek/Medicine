@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Medicine
+namespace Medicine.Database
 {
     public class DbBrowser
     {
@@ -15,7 +15,7 @@ namespace Medicine
         public static void Browse(ref MedicineDb mainDb)
         {
             int currentId = 1;
-            while(true)
+            while (true)
             {
                 var medicine = mainDb.GetMedicineById(currentId);
                 if (medicine == null)
@@ -29,7 +29,7 @@ namespace Medicine
                 Navigation choice = MenuChoice();
                 if (choice != Navigation.Exit)
                 {
-                    if(choice == Navigation.Next)
+                    if (choice == Navigation.Next)
                     {
                         currentId++;
                         continue;
@@ -37,11 +37,11 @@ namespace Medicine
 
                     if (choice == Navigation.Previous)
                     {
-                        if(currentId != 1) currentId--;
+                        if (currentId != 1) currentId--;
                         continue;
                     }
 
-                    if(choice == Navigation.ByID)
+                    if (choice == Navigation.ByID)
                     {
                         var z = ConsoleGUI.PromptRender("ID: ");
                         if (int.TryParse(z, out int s))
@@ -50,7 +50,7 @@ namespace Medicine
                             ConsoleGUI.ErrorRender("ID: " + z + " nie jest poprawne", true);
                     }
 
-                    if(choice == Navigation.Incorrect)
+                    if (choice == Navigation.Incorrect)
                     {
                         continue;
                     }
@@ -72,7 +72,7 @@ namespace Medicine
             toRender.Add("Ilość leku: " + medicine.MedicineQuantity + " " + medicine.MedicineQuantityType);
             toRender.Add("Cena normalna: " + medicine.MedicinePrice);
 
-            if(medicine.MedicineRefundPossible)
+            if (medicine.MedicineRefundPossible)
             {
                 toRender.Add("Refundacja tego leku jest możliwa i wynosi " + medicine.MedicineRefundPercentage + "%");
                 toRender.Add("Cena po refundacji: " + medicine.MedicinePriceWithRefund);
